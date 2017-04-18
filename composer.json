@@ -1,0 +1,19 @@
+{
+    "name": "makframework/makframework",
+    "description": "PHP Framework",
+    "type": "framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Junior Ochei Ruiz",
+            "email": "mak.hmc@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "Makframework\\": "src"
+      }
+    }
+}
