@@ -1,14 +1,17 @@
 <?php
 use Makframework\Http\Request;
 use Makframework\Http\Response;
+use Makframework\Router\Router;
+
 $autoload = require "vendor/autoload.php";
 
-$resp = new Response('Prueba de Response Http', Response::OK);
 
-$respHeaders = $resp->getHeaders();
+$request = Request::capture();
 
-$respHeaders->add(['user' => 'junior','edad' => 20]);
+Router::get('/', function () {
+});
 
-echo $respHeaders;
 
-$resp->send();
+$router = new Router($request);
+
+echo $router;

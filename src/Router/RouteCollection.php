@@ -1,14 +1,25 @@
 <?php
 namespace Makframework\Router;
 
+use InvalidArgumentException;
+use Makframework\Core\Object;
+
 /**
  *RouteCollection
  */
-abstract class RouteCollection {
-  /**
+abstract class RouteCollection extends Object
+{
+    /**
+   *Route
    *@var array
    */
   protected static $route = [];
+
+  /**
+   *Methods allowed
+   *@var array
+   */
+  protected static $methodsAllowed = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'];
 
   /**
    *Add General
@@ -19,9 +30,15 @@ abstract class RouteCollection {
    */
   protected static function add(array $methods, string $route, $resource) : void
   {
-    foreach($methods as $method) {
-      self::$route[$method][$route] = $resource;
-    }
+      foreach ($methods as $method) {
+          $method = strtoupper($method);
+
+          if (!in_array($method, self::$methodsAllowed)) {
+              throw new InvalidArgumentException("$method: Invalid Http method.");
+              break;
+          }
+          self::$route[$method][$route] = $resource;
+      }
   }
 
   /**
@@ -30,8 +47,9 @@ abstract class RouteCollection {
    *@param string|callable $resource
    *@return void
    */
-  public static function get(string $route, $resource) : void {
-    self::add(['GET'], $route, $resource);
+  public static function get(string $route, $resource) : void
+  {
+      self::add(['GET'], $route, $resource);
   }
 
   /**
@@ -40,7 +58,8 @@ abstract class RouteCollection {
    *@param string|callable $resource
    *@return void
    */
-  public static function post(string $route, $resource) : void {
-    self::add(['POST'], $route, $resource);
+  public static function post(string $route, $resource) : void
+  {
+      self::add(['POST'], $route, $resource);
   }
 }
