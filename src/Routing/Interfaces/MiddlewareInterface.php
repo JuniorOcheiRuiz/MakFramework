@@ -1,10 +1,12 @@
 <?php
 namespace Makframework\Routing\Interfaces;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * MiddlewareInterface
  */
 interface MiddlewareInterface
 {
-  public function __invoke($request, $response, $next);
+  public function __invoke(RequestInterface $request, ResponseInterface $response, $next);
 }

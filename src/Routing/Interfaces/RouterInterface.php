@@ -16,4 +16,6 @@ interface RouterInterface
   public function map(array $methods, string $pattern, $callback) : RouteInterface;
 
 
+  public function run() : void;
+
 }
