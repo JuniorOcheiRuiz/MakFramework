@@ -122,4 +122,9 @@ class Route extends Routable implements RouteInterface
 
     return $result;
   }
+
+  public function __toString()
+  {
+    return 'Methods('.implode('|',$this->methods).') - Pattern('.$this->pattern.') - Name('.$this->name.')';
+  }
 }
