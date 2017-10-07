@@ -1,20 +1,47 @@
 <?php
 namespace Makframework\Routing\Interfaces;
+use Closure;
 
 /**
  *
  */
 interface RoutableInterface
 {
+  /**
+   * setPattern
+   * @param string $pattern
+   * @return RoutableInterface
+   */
   public function setPattern(string $pattern) : RoutableInterface;
 
-  public function getPattern(string $pattern) : string;
+  /**
+   * getPattern
+   * @return string
+   */
+  public function getPattern() : string;
 
-  public function setCallback(string $pattern) : RoutableInterface;
+  /**
+   * setCallback
+   * @param callable $callback
+   * @return RoutableInterface
+   */
+  public function setCallback(callable $callback) : RoutableInterface;
 
-  public function getCallback(string $pattern) : string;
+  /**
+   * getCallback
+   * @return string
+   */
+  public function getCallback() : Closure;
 
-  public function addMiddleware() : RoutableInterface;
+  /**
+   * addMiddleware
+   * @param MiddlewareInterface $middleware [description]
+   */
+  public function addMiddleware(MiddlewareInterface $middleware) : RoutableInterface;
 
+  /**
+   * getMiddlewares
+   * @return MiddlewareInterface[]
+   */
   public function getMiddlewares() : array;
 }

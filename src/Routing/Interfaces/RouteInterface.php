@@ -16,27 +16,13 @@ interface RouteInterface extends RoutableInterface
    * @param callable|\Closure $callback
    * @return RouteInterface
    */
-  public function __construct(array $methods, string $pattern, $callback);
-
-  /**
-   * addMethods
-   * @param string[] $methods
-   *@return self
-   */
-  public function addMethods(array $methods) : RouteInterface;
-
-  /**
-   * removeMethods
-   * @param string $method
-   * @return self
-   */
-  public function removeMethods(string $method = '') : RouteInterface;
+  public function __construct(array $methods, string $pattern, callable $callback);
 
   /**
    * setArgument
    * @param string $key
    * @param string $value
-   *@return static
+   *@return self
    */
   public function setArgument(string $key, $value) : RouteInterface;
 
@@ -44,7 +30,7 @@ interface RouteInterface extends RoutableInterface
    * setArgument
    * @param string $key
    * @param string $value
-   *@return static
+   *@return self
    */
   public function setArguments(array $arguments) : RouteInterface;
 
@@ -52,7 +38,7 @@ interface RouteInterface extends RoutableInterface
    * getArgument
    * @param string $key
    * @param string $value
-   *@return static
+   *@return self
    */
   public function getArgument(string $key);
 
@@ -60,7 +46,7 @@ interface RouteInterface extends RoutableInterface
    * getArguments
    * @param string $key
    * @param string $value
-   *@return static
+   *@return self
    */
   public function getArguments() : array;
 

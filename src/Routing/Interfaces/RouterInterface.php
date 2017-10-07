@@ -13,7 +13,7 @@ interface RouterInterface
    * @param callable|\Closure $callback
    * @return RouteInterface
    */
-  public function map(array $methods, string $pattern, $callback) : RouteInterface;
+  public function map(array $methods, string $pattern, callable $callback) : RouteInterface;
 
 
   public function run() : void;
