@@ -19,36 +19,20 @@ interface RouteInterface extends RoutableInterface
   public function __construct(array $methods, string $pattern, callable $callback);
 
   /**
-   * setArgument
-   * @param string $key
-   * @param string $value
-   *@return self
+   * setMethods
+   *
+   * @param string[] $methods
+   *
+   * @return RouteInterface
    */
-  public function setArgument(string $key, $value) : RouteInterface;
+  public function setMethods(array $methods) : RouteInterface;
 
   /**
-   * setArgument
-   * @param string $key
-   * @param string $value
-   *@return self
+   * getMethods
+   *
+   * @return array
    */
-  public function setArguments(array $arguments) : RouteInterface;
-
-  /**
-   * getArgument
-   * @param string $key
-   * @param string $value
-   *@return self
-   */
-  public function getArgument(string $key);
-
-  /**
-   * getArguments
-   * @param string $key
-   * @param string $value
-   *@return self
-   */
-  public function getArguments() : array;
+  public function getMethods() : array;
 
   /**
    * setName
@@ -63,11 +47,5 @@ interface RouteInterface extends RoutableInterface
    */
   public function getName() : string;
 
-  /**
-   * __invoke
-   * @param RequestInterface $request
-   * @param ResponseInterface $response
-   * @return mixed
-   */
-  public function __invoke(RequestInterface $request, ResponseInterface $response);
+
 }

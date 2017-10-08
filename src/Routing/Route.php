@@ -16,11 +16,6 @@ class Route extends Routable implements RouteInterface
 
 
   /**
-   * @var array
-   */
-  protected $arguments;
-
-  /**
    * @var string
    */
   protected $name;
@@ -35,59 +30,33 @@ class Route extends Routable implements RouteInterface
    */
   public function __construct(array $methods, string $pattern, callable $callback)
   {
-    $this->methods = $methods;
-    $this->pattern = $pattern;
-    $this->callback = $callback;
-    $this->arguments = [];
-    $this->name = '';
-    $this->middlewares = [];
+    $this->setMethods($methods);
+    $this->setPattern($pattern);
+    $this->setCallback($callback);
   }
 
   /**
-   * setArgument
-   * @param string $key
-   * @param string $value
+   * setMethods
+   *
+   * @param string[] $methods
+   *
    * @return RouteInterface
    */
-  public function setArgument(string $key, $value) : RouteInterface
+  public function setMethods(array $methods) : RouteInterface
   {
-    $this->arguments[$key] = $value;
-    return $this;
-  }
-
-  /**
-   * setArgument
-   * @param string $key
-   * @param string $value
-   * @return RouteInterface
-   */
-  public function setArguments(array $arguments) : RouteInterface
-  {
-    $this->arguments = $arguments;
+    $this->methods = array_map('strtoupper', $methods);
 
     return $this;
   }
 
   /**
-   * getArgument
-   * @param string $key
-   * @param string $value
-   * @return RouteInterface
+   * getMethods
+   *
+   * @return array
    */
-  public function getArgument(string $key)
+  public function getMethods() : array
   {
-    return $this->arguments[$key];
-  }
-
-  /**
-   * getArguments
-   * @param string $key
-   * @param string $value
-   * @return RouteInterface
-   */
-  public function getArguments() : array
-  {
-    return $this->arguments;
+    return $this->methods;
   }
 
   /**
@@ -118,13 +87,11 @@ class Route extends Routable implements RouteInterface
    */
   public function __invoke(RequestInterface $request, ResponseInterface $response)
   {
-    $result = call_user_func($this->callback, $request, $response, $this->arguments);
-
-    return $result;
+      return call_user_func($this->callback, $request, $response, $this->arguments);
   }
 
   public function __toString()
   {
-    return 'Methods('.implode('|',$this->methods).') - Pattern('.$this->pattern.') - Name('.$this->name.')';
+    return 'Methods['.implode('|',$this->methods).'] - Pattern['.$this->pattern.'] - Name['.$this->name.']';
   }
 }
