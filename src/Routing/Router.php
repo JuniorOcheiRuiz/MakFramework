@@ -1,6 +1,7 @@
 <?php
 namespace Makframework\Routing;
 
+use Makframework\Routing\Interfaces\RouteInterface;
 use Makframework\Routing\Interfaces\RouterInterface;
 
 /**
@@ -9,9 +10,10 @@ use Makframework\Routing\Interfaces\RouterInterface;
 class Router implements RouterInterface
 {
   /**
-   *  @var Route[]
+   *  @var RouteInterface[]
    */
   protected $routes = [];
+
 
   protected $container;
 
@@ -25,7 +27,22 @@ class Router implements RouterInterface
 
   }
 
+  protected function builtSegments(string $pattern) : array 
+  {
+
+  }
+
+  protected function match(string $requestPath) : RouteInterface
+  {
+    foreach ($this->routes as $pattern => $route) {
+      if (preg_match('#')) {
+
+      }
+    }
+
+    return false;
+  }
 
   public function run() : void;
-  
+
 }
