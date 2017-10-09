@@ -2,7 +2,7 @@
 namespace Makframework\Routing;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Makframework\Http\Interfaces\ResponseInterface;
 
 /**
  * Route
@@ -14,6 +14,10 @@ class Route extends Routable implements RouteInterface
    */
   protected $methods;
 
+  /**
+   * @var array
+   */
+  protected $arguments;
 
   /**
    * @var string
@@ -33,6 +37,7 @@ class Route extends Routable implements RouteInterface
     $this->setMethods($methods);
     $this->setPattern($pattern);
     $this->setCallback($callback);
+    $this->setArguments([]);
   }
 
   /**
@@ -57,6 +62,102 @@ class Route extends Routable implements RouteInterface
   public function getMethods() : array
   {
     return $this->methods;
+  }
+
+  /**
+   * hasMethod
+   * @param string $method
+   *
+   * @return bool
+   */
+  public function hasMethod(string $method) : bool
+  {
+    return (empty($this->methods) || array_search($method, $this->methods) !== false);
+  }
+
+  /**
+   * getArgument
+   * @param string $name [description]
+   * @return mixed
+   */
+  public function getArgument(string $name)
+  {
+    return $this->arguments[$name];
+  }
+
+  /**
+   * getArguments
+   * @return array
+   */
+  public function getArguments() : array
+  {
+    return $this->arguments;
+  }
+
+  /**
+   * setArguments
+   * @param array $arguments
+   * @return RouteInterface
+   */
+  public function setArguments(array $arguments) : RouteInterface
+  {
+    $this->arguments = $arguments;
+    return $this;
+  }
+
+  /**
+   * setArgument
+   * @param string $name
+   * @param mixed $value
+   * @return RouteInterface
+   */
+  public function setArgument(string $name, $value) : RouteInterface
+  {
+    $this->arguments[$name] = $value;
+  }
+
+  /**
+   * addArgument
+   *
+   * Add a value to the arguments stack. If the key of a value is already present in the stack,
+   * the method throw a exception reporting the duplicate value.
+   *
+   * @param string $name
+   * @param mixed $value
+   *
+   * @return RouteInterface
+   *
+   * @throws RouteException
+   */
+  public function addArgument(string $name, $value) : RouteInterface
+  {
+    if (isset($this->arguments[$name]))
+      throw new RouteException(sprintf('The argument %s is already exists in the arguments stack.', $name));
+
+    $this->arguments[$name] = $value;
+
+    return $this;
+  }
+
+  /**
+   * addArguments
+   *
+   * Add values to the arguments stack. If the key of a value is already present in the stack,
+   * the method throw a exception reporting the duplicate value.
+   *
+   * @param array $arguments
+   *
+   * @return RouteInterface
+   *
+   * @throws RouteException
+   */
+  public function addArguments(array $arguments) : RouteInterface
+  {
+    foreach ($arguments as $name => $value) {
+      $this->addArgument($name, $value);
+    }
+
+    return $this;
   }
 
   /**

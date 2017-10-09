@@ -125,8 +125,12 @@ interface RouterInterface
   /**
    * run
    *
+   * @param bool $debugMode
+   *
+   * @throws HttpException
+   *
    * @return void
    */
-  public function run() : void;
+  public function run(bool $debugMode = false) : void;
 
 }
