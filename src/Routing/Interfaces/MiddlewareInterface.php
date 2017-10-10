@@ -8,5 +8,5 @@ use Makframework\Http\Interfaces\ResponseInterface;
  */
 interface MiddlewareInterface
 {
-  public function __invoke(RequestInterface $request, ResponseInterface $response, $next);
+  public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next);
 }

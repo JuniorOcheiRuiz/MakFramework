@@ -8,6 +8,7 @@ use Makframework\Routing\Exceptions\RouterException;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Makframework\Routing\Interfaces\RouterInterface;
 use Makframework\Routing\Interfaces\RoutableInterface;
+use Makframework\Routing\Interfaces\MiddlewareInterface;
 use Makframework\Routing\Interfaces\RouteGroupInterface;
 use Psr\Http\Message\RequestInterface;
 use Makframework\Http\Interfaces\ResponseInterface;
@@ -158,16 +159,18 @@ class Router implements RouterInterface
 
   protected function executeRoute(Routable $route)
   {
-    $executables = [];
+    $middlewares = $route->getMiddlewares();
 
-    $executables += $route->getMiddlewares();
+    do {
+      $executable = current($executables);
+      $executable = $executable($this->request, $this->response, next($executables));
+    } while ($executable instanceof MiddlewareInterface);
 
-    $executables[] = $route;
 
-    // this will be remove
-    foreach ($executables as $executable) {
-      $executable($this->request, $this->response);
-    }
+      if (!$output instanceof ) {
+
+      }
+
   }
 
 }

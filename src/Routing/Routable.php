@@ -1,6 +1,7 @@
 <?php
 namespace Makframework\Routing;
 use Closure;
+use Makframework\Routing\Exceptions\RouterException;
 use Makframework\Routing\Exceptions\RoutableException;
 use Makframework\Routing\Interfaces\RoutableInterface;
 use Makframework\Routing\Interfaces\MiddlewareInterface;
@@ -18,6 +19,8 @@ abstract class Routable implements RoutableInterface
   protected $callback;
 
   protected $middlewares = [];
+
+  protected $stack = null;
 
   /**
    * setPattern
@@ -70,6 +73,7 @@ abstract class Routable implements RoutableInterface
   public function addMiddleware(MiddlewareInterface $middleware) : RoutableInterface
   {
     $this->middlewares[] = $middleware;
+
     return $this;
   }
 
@@ -81,4 +85,32 @@ abstract class Routable implements RoutableInterface
   {
     return $this->middlewares;
   }
+
+  protected function pushToStack(callable $callback) : RoutableInterface
+  {
+    if ($this->stack === null) {
+      $this->stack = $this;
+    }
+
+    // Next callable to execute
+    $next = $this->stack;
+
+    // New callable
+    $this->stack = function (RequestInterface $request,ResponseInterface $response) use($callback, $next) {
+
+      $result = call_user_func($callback, $request, $response, $next);
+
+      if (!$result instanceof ResponseInterface)
+        throw new RouterException('The output of moddleware must be a intance of Makframework\Http\Interfaces\ResponseInterface');
+
+      return $result;
+    };
+
+    return $this;
+  }
+
+  // public function callStack(RequestInterface $request, ResponseInterface $response) : ResponseInterface
+  // {
+  //   return $this->stack($request, $response);
+  // }
 }

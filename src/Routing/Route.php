@@ -3,6 +3,7 @@ namespace Makframework\Routing;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Psr\Http\Message\RequestInterface;
 use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Route
@@ -178,6 +179,17 @@ class Route extends Routable implements RouteInterface
   public function getName() : string
   {
     return $this->name;
+  }
+
+  /**
+   * Execute
+   *
+   * Execute the route and its assigned middlewares
+   *
+   */
+  public function execute(RequestInterface $request, ResponseInterface $response)
+  {
+    return $this->stack($request, $response);
   }
 
   /**
