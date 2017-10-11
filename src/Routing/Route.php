@@ -2,7 +2,6 @@
 namespace Makframework\Routing;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -205,6 +204,6 @@ class Route extends Routable implements RouteInterface
 
   public function __toString()
   {
-    return 'Methods['.implode('|',$this->methods).'] - Pattern['.$this->pattern.'] - Name['.$this->name.']';
+    return 'Methods: '.implode('|',$this->methods).' - Pattern: '.$this->pattern.' - Name: '.$this->name.'';
   }
 }

@@ -9,14 +9,13 @@ use Makframework\Routing\Interfaces\RouteInterface;
 use Makframework\Routing\Interfaces\RouterInterface;
 use Makframework\Routing\Interfaces\RoutableInterface;
 use Makframework\Routing\Interfaces\MiddlewareInterface;
-use Makframework\Routing\Interfaces\RouteGroupInterface;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *
  */
-class Router implements RouterInterface
+class Router extends RouterMethods implements RouterInterface
 {
   /**
    * @var string
@@ -38,15 +37,10 @@ class Router implements RouterInterface
   protected $response;
 
 
-  public function __construct(RequestInterface $request, ResponseInterface $response)
+  public function __construct(RequestInterface $request = null, ResponseInterface $response = null)
   {
     $this->request = $request;
     $this->response = $response;
-  }
-
-  public function map(string $method, string $requestPath, $callable)
-  {
-
   }
 
   protected function builtSegments(string $pattern) : array
@@ -88,41 +82,35 @@ class Router implements RouterInterface
   {
     foreach ($this->routes as $pattern => $route) {
 
-      // Filter by type
-      if ($route instanceof RouteGroupInterface) {
-        // RouteGroup
-        if (preg_match('#^'.$pattern.'$#', $requestPath))
-          return $route;
-      } else {
-        // RouteInterface
-        [$pattern, $segments] = $this->builtSegments($pattern);
+      [$pattern, $segments] = $this->builtSegments($pattern);
 
-        if (preg_match('#^'.$pattern.'$#', $requestPath, $arguments)) {
-          // remove full match of the array
-          array_shift($arguments);
+      if (preg_match('#^'.$pattern.'$#', $requestPath, $arguments)) {
+        // remove full match of the array
+        array_shift($arguments);
 
-          // if segments and arguments do not match in number
-          if (count($segments) != count($arguments))
-            throw new RouterException(sprintf('Segments and arguments do not match in number.'));
+        // if segments and arguments do not match in number
+        if (count($segments) != count($arguments))
+          throw new RouterException(sprintf('Segments and arguments do not match in number.'));
 
-          // Assign segments to arguments
-          foreach ($segments as $index => $segment) {
-            $arguments[$segment] = $arguments[$index];
-            unset($arguments[$index]);
-          }
-
-          // set arguments in the route
-          $route->setArguments($arguments);
-
-          //return the route object
-          return $route;
+        // Assign segments to arguments
+        foreach ($segments as $index => $segment) {
+          $arguments[$segment] = $arguments[$index];
+          unset($arguments[$index]);
         }
-      } // end filter by type
+
+        // set arguments in the route
+        $route->setArguments($arguments);
+
+        //return the route object
+        return $route;
+      }
     } // end foreach
 
     // if not found match, return null
     return null;
   }
+
+
   /**
    * run
    *
@@ -159,18 +147,7 @@ class Router implements RouterInterface
 
   protected function executeRoute(Routable $route)
   {
-    $middlewares = $route->getMiddlewares();
-
-    do {
-      $executable = current($executables);
-      $executable = $executable($this->request, $this->response, next($executables));
-    } while ($executable instanceof MiddlewareInterface);
-
-
-      if (!$output instanceof ) {
-
-      }
-
+    $route->callStack();
   }
 
 }

@@ -2,7 +2,7 @@
 namespace Makframework\Routing\Interfaces;
 use Closure;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * RouteInterface

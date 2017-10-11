@@ -1,7 +1,7 @@
 <?php
 namespace Makframework\Http\Exceptions;
 
-use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * HttpException

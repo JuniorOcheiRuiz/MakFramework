@@ -6,7 +6,6 @@ use Makframework\Routing\Exceptions\RoutableException;
 use Makframework\Routing\Interfaces\RoutableInterface;
 use Makframework\Routing\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -14,12 +13,24 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class Routable implements RoutableInterface
 {
+  /**
+   * @var string
+   */
   protected $pattern = '';
 
+  /**
+   * @var callable
+   */
   protected $callback;
 
+  /**
+   * @var MiddlewareInterface[]
+   */
   protected $middlewares = [];
 
+  /**
+   * @var callable
+   */
   protected $stack = null;
 
   /**
@@ -72,26 +83,27 @@ abstract class Routable implements RoutableInterface
    */
   public function addMiddleware(MiddlewareInterface $middleware) : RoutableInterface
   {
-    $this->middlewares[] = $middleware;
-
-    return $this;
+    $this->middleware = $middleware;
   }
 
   /**
-   * getMiddlewares
-   * @return MiddlewareInterface[]
+   * addMiddlewares
+   * @param MiddlewareInterface[] $middlewares [description]
    */
-  public function getMiddlewares() : array
+  public function addMiddlewares(array $middlewares) : RoutableInterface
   {
-    return $this->middlewares;
+    $this->middlewares += $middlewares;
   }
 
-  protected function pushToStack(callable $callback) : RoutableInterface
+  /**
+   * pushToStack
+   *
+   * @param callable $callback
+   *
+   * @return Routable
+   */
+  protected function pushToStack(callable $callaback) : Routable
   {
-    if ($this->stack === null) {
-      $this->stack = $this;
-    }
-
     // Next callable to execute
     $next = $this->stack;
 
@@ -109,8 +121,32 @@ abstract class Routable implements RoutableInterface
     return $this;
   }
 
-  // public function callStack(RequestInterface $request, ResponseInterface $response) : ResponseInterface
-  // {
-  //   return $this->stack($request, $response);
-  // }
+  /**
+   * getMiddlewares
+   * @return MiddlewareInterface[]
+   */
+  public function getMiddlewares() : array
+  {
+    return $this->middlewares;
+  }
+
+  /**
+   * callStack
+   * @param RequestInterface
+   * @param ResponseInterface
+   */
+  public function callStack(RequestInterface $request, ResponseInterface $response) : ResponseInterface
+  {
+    if ($this->stack === null) {
+      $this->stack = $this;
+    }
+
+
+    foreach ($this->middlewares as $middleware) {
+        $this->pushToStack($middleware);
+    }
+
+    // execute the stack
+    return $this->stack($request, $response);
+  }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Makframework\Routing;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 
 /**

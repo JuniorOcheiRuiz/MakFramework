@@ -2,7 +2,7 @@
 namespace Makframework\Routing\Interfaces;
 use Closure;
 use Psr\Http\Message\RequestInterface;
-use Makframework\Http\Interfaces\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *
@@ -40,6 +40,12 @@ interface RoutableInterface
    * @param MiddlewareInterface $middleware [description]
    */
   public function addMiddleware(MiddlewareInterface $middleware) : RoutableInterface;
+
+  /**
+   * addMiddlewares
+   * @param MiddlewareInterface[] $middlewares [description]
+   */
+  public function addMiddlewares(array $middleware) : RoutableInterface;
 
   /**
    * getMiddlewares

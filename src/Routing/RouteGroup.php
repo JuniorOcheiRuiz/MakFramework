@@ -1,32 +1,52 @@
 <?php
 namespace Makframework\Routing;
+use Closure;
+use Makframework\Routing\Interfaces\RouteInterface;
+use Makframework\Routing\Interfaces\RouterInterface;
 use Makframework\Routing\Interfaces\RouteGroupInterface;
-
 /**
  * RouteGroup
  */
 class RouteGroup extends Routable implements RouteGroupInterface
 {
+  /**
+   * @var RouterInterface
+   */
+  protected $router;
 
   /**
    * Class constructor
    * @param string $pattern
    * @param callable $callback
    */
-  public function __construct(string $pattern, $callback)
+  public function __construct(string $pattern, callable $callback)
   {
-    $this->setPattern($pattern);
-    $this->setCallback($callback);
+    if (!$callback instanceof Closure) {
+      $callback = Closure::fromCallable($callback);
+    }
+
+    $this->router = new Router();
+    $this->router->setBasePath($pattern);
+
+    // Router instance as $this of Closure
+    $callback->bindTo($this->router);
+
+    $callback();
   }
 
   /**
-   * __invoke
-   * @param RequestInterface $request
-   * @param ResponseInterface $response
-   * @return mixed
+   * getRoutes
+   * @return RouteInterface[]
    */
-  public function __invoke(RequestInterface $request, ResponseInterface $response)
+  public function getRoutes() : array
   {
-    return call_user_func($this->callback);
+    return $this->route
+  }
+
+  public function __destruct()
+  {
+    foreach ($this->router->getRoutes() as $route) {
+      $route->addMiddlewares($this->getMiddlewares());
+    }
   }
 }

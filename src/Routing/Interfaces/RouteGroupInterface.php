@@ -1,6 +1,5 @@
 <?php
 namespace Makframework\Routing\Interfaces;
-
 /**
  * RouteGroupInterface
  */
@@ -11,5 +10,5 @@ interface RouteGroupInterface extends RoutableInterface
    * @param string $pattern
    * @param callable $callback
    */
-  public function __construct(string $pattern, $callback);
+  public function __construct(string $pattern, callable $callback);
 }
