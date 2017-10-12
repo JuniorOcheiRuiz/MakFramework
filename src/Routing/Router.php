@@ -8,24 +8,14 @@ use Makframework\Routing\Exceptions\RouterException;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Makframework\Routing\Interfaces\RouterInterface;
 use Makframework\Routing\Interfaces\RoutableInterface;
-use Makframework\Routing\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- *
+ * Router
  */
 class Router extends RouteCollection implements RouterInterface
 {
-  /**
-   * @var string
-   */
-  protected $basePath = '';
-  /**
-   *  @var RouteInterface[]
-   */
-  protected $routes = [];
-
   /**
    * @var RequestInterface
    */
@@ -36,13 +26,24 @@ class Router extends RouteCollection implements RouterInterface
    */
   protected $response;
 
-
+  /**
+   * Constructor class
+   * @param RequestInterface|null $request
+   * @param ResponseInterface|null $response
+   */
   public function __construct(RequestInterface $request = null, ResponseInterface $response = null)
   {
     $this->request = $request;
     $this->response = $response;
   }
 
+  /**
+   * builtSegments
+   *
+   * @param string $pattern
+   *
+   * @return array
+   */
   protected function builtSegments(string $pattern) : array
   { //search of segments: \{([a-zA-Z]+)\}|\{([a-zA-Z]+:.+)\}
     $segments = [];
@@ -145,9 +146,24 @@ class Router extends RouteCollection implements RouterInterface
     $this->executeRoute($route);
   }
 
-  protected function executeRoute(Routable $route)
+  /**
+   * executeRoute
+   *
+   * This method execute the route and print the Http response
+   *
+   * @param RouteInterface $route
+   *
+   * @return void
+   */
+  protected function executeRoute(RouteInterface $route) : void
   {
-    $route->callStack();
-  }
+    $response = $route->callStack();
 
+    if ($response instanceof ResponseInterface) {
+      echo $response;
+    } else {
+      $response = new Response((string) $response);
+      echo $response;
+    }
+  }
 }
