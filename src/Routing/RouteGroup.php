@@ -41,4 +41,15 @@ class RouteGroup extends Routable implements RouteGroupInterface
   {
     return $this->routeCollection->getRoutes();
   }
+
+  /**
+   * __destruct
+   * This method add all middlewares of the RouteGroup to the routes, when execution of this class is finished. 
+   */
+  public function __destruct()
+  {
+    foreach ($this->getRoutes() as $route) {
+      $route->addMiddlewares($this->middlewares);
+    }
+  }
 }

@@ -54,6 +54,8 @@ class RouteCollection implements RouteCollectionInterface
    */
   public function map(array $methods, string $pattern, callable $callback) : RouteInterface
   {
+    // concat basePattern
+    $pattern = $this->basePattern . $pattern;
     return new Route($methods, $pattern, $callback);
   }
 
@@ -150,7 +152,12 @@ class RouteCollection implements RouteCollectionInterface
    */
   public function group(string $pattern, callable $callback) : RouteGroupInterface
   {
-    return new RouteGroup($pattern, $callback);
+    $group = new RouteGroup($pattern, $callback);
+
+    // add instance of routes from RouteGroup in routes of RouteCollection parent.
+    $this->addRoutes($group->getRoutes());
+
+    return $group;
   }
 
   /**
