@@ -24,6 +24,11 @@ class Route extends Routable implements RouteInterface
    */
   protected $name;
 
+  /**
+   * @var callable
+   */
+  protected $stack = null;
+
 
   /**
    * class constructor
@@ -181,15 +186,52 @@ class Route extends Routable implements RouteInterface
   }
 
   /**
-   * Execute
+   * pushToStack
    *
-   * Execute the route and its assigned middlewares
+   * @param callable $callback
    *
+   * @return Routable
    */
-  public function execute(RequestInterface $request, ResponseInterface $response)
+  protected function pushToStack(callable $callaback) : Routable
   {
+    // Next callable to execute
+    $next = $this->stack;
+
+    // New callable
+    $this->stack = function (RequestInterface $request,ResponseInterface $response) use($callback, $next) {
+
+      $result = call_user_func($callback, $request, $response, $next);
+
+      if (!$result instanceof ResponseInterface)
+        throw new RouterException('The output of moddleware must be a intance of Makframework\Http\Interfaces\ResponseInterface');
+
+      return $result;
+    };
+
+    return $this;
+  }
+
+
+  /**
+   * callStack
+   * @param RequestInterface
+   * @param ResponseInterface
+   */
+  public function callStack(RequestInterface $request, ResponseInterface $response) : ResponseInterface
+  {
+    if ($this->stack === null) {
+      $this->stack = $this;
+    }
+
+
+    foreach ($this->middlewares as $middleware) {
+        $this->pushToStack($middleware);
+    }
+
+    // execute the stack
     return $this->stack($request, $response);
   }
+
 
   /**
    * __invoke

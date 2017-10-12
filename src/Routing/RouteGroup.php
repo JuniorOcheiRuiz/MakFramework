@@ -10,9 +10,9 @@ use Makframework\Routing\Interfaces\RouteGroupInterface;
 class RouteGroup extends Routable implements RouteGroupInterface
 {
   /**
-   * @var RouterInterface
+   * @var RouteCollection
    */
-  protected $router;
+  protected $routeCollection;
 
   /**
    * Class constructor
@@ -21,17 +21,16 @@ class RouteGroup extends Routable implements RouteGroupInterface
    */
   public function __construct(string $pattern, callable $callback)
   {
-    if (!$callback instanceof Closure) {
-      $callback = Closure::fromCallable($callback);
-    }
+    $this->setPattern($pattern);
+    $this->setCallback($callback);
 
-    $this->router = new Router();
-    $this->router->setBasePath($pattern);
+    $this->routeCollection = new RouteCollection();
+    $this->routeCollection->setBasePattern($this->pattern);
 
     // Router instance as $this of Closure
-    $callback->bindTo($this->router);
+    $this->callback->bindTo($this->routeCollection);
 
-    $callback();
+    $this->callback();
   }
 
   /**
@@ -40,13 +39,6 @@ class RouteGroup extends Routable implements RouteGroupInterface
    */
   public function getRoutes() : array
   {
-    return $this->route
-  }
-
-  public function __destruct()
-  {
-    foreach ($this->router->getRoutes() as $route) {
-      $route->addMiddlewares($this->getMiddlewares());
-    }
+    return $this->routeCollection->getRoutes();
   }
 }

@@ -111,5 +111,10 @@ interface RouteInterface extends RoutableInterface
    */
   public function getName() : string;
 
-
+  /**
+   * callStack
+   * @param RequestInterface
+   * @param ResponseInterface
+   */
+  public function callStack(RequestInterface $request, ResponseInterface $response) : ResponseInterface;
 }

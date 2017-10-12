@@ -1,12 +1,48 @@
 <?php
 namespace Makframework\Routing;
 use Closure;
+use Makframework\Routing\Interfaces\RouteInterface;
+use Makframework\Routing\Interfaces\RouteGroupInterface;
+use Makframework\Routing\Interfaces\RouteCollectionInterface;
 
 /**
  * RouterMethods
  */
-abstract class RouterMethods implements RouterMethodsInterface
+class RouteCollection implements RouteCollectionInterface
 {
+  /**
+   * @var string
+   */
+  protected $basePattern = '';
+
+  /**
+   * @var RouteInterface[]
+   */
+  protected $routes = [];
+
+  /**
+   * setBasePattern
+   *
+   * @param string $pattern
+   *
+   * @return RouteCollection
+   */
+  public function setBasePattern(string $pattern) : RouteCollection
+  {
+    $this->basePattern = $pattern;
+
+    return $this;
+  }
+
+  /**
+   * getBasePattern
+   *
+   * @return string
+   */
+  public function getBasePattern() : string
+  {
+    return $this->basePattern;
+  }
 
   /**
    * map
@@ -112,8 +148,46 @@ abstract class RouterMethods implements RouterMethodsInterface
    * @param callable|Closure $callback
    * @return RouteGroupInterface
    */
-  public function group(string $pattern, $callback) : RouteGroupInterface
+  public function group(string $pattern, callable $callback) : RouteGroupInterface
   {
-    $routeGroup = 
+    return new RouteGroup($pattern, $callback);
+  }
+
+  /**
+   * addRoute
+   *
+   * @param RouteInterface $route
+   *
+   * @return RouteCollectionInterface
+   */
+  public function addRoute(RouteInterface $route) : RouteCollectionInterface
+  {
+    $this->routes[] = $route;
+  }
+
+  /**
+   * addRoutes
+   *
+   * @param RouteInterface[] $routes
+   *
+   * @return RouteCollectionInterface
+   */
+  public function addRoutes(array $routes) : RouteCollectionInterface
+  {
+    foreach ($routes as $route) {
+      $this->addRoute($route);
+    }
+
+    return $this;
+  }
+
+  /**
+   * getRoutes()
+   *
+   * @return RouteInterface[]
+   */
+  public function getRoutes() : array
+  {
+    return $this->routes;
   }
 }

@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  *
  */
-class Router extends RouterMethods implements RouterInterface
+class Router extends RouteCollection implements RouterInterface
 {
   /**
    * @var string
