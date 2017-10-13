@@ -71,12 +71,20 @@ class Message extends MessageInterface
     return $clone;
   }
 
-
-  protected function prepareHeaderName($name)
+  /**
+   * prepareHeaderName
+   * @param string $name
+   * @return string
+   */
+  protected function prepareHeaderName(string $name)
   {
     return strtolower($name);
   }
 
+  /**
+   * getclone
+   * @return static
+   */
   protected function getClone()
   {
     return clone $this;

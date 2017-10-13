@@ -10,18 +10,38 @@ use Psr\Http\Message\StreamInterface;
  */
 class Stream extends StreamInterface
 {
+  /**
+   * resource
+   * @var resource|null
+   */
   protected $resource = null;
 
+  /**
+   * size
+   * @var int
+   */
   protected $size = 0;
 
+  /**
+   * meta_data
+   * @var array
+   */
   protected $meta_data;
 
+
+  /**
+   * modes
+   * @var array[][]
+   */
   protected static $modes = [
     'read' => ['r' => true, 'r+' => true, 'w+' => true, 'a+' => true, 'x+' => true, 'c+' => true],
     'write' => ['r+' => true, 'w' => true, 'a' => true, 'a+' => true, 'x' => true, 'x+' => true, 'c' => true, 'c+' => true]
   ];
 
-
+  /**
+   * Constructor class
+   * @param resource $resource
+   */
   public function __construct($resource)
   {
     $this->setResource($resource);
@@ -29,7 +49,7 @@ class Stream extends StreamInterface
 
   /**
    * setResource
-   * @param resource
+   * @param resource $resource
    * @return Stream
    */
   public function setResource($resource) : Stream

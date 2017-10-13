@@ -8,6 +8,10 @@ namespace Makframework\Http;
 class Body extends Stream
 {
 
+  /**
+   * Constructor class
+   * @param string $string
+   */
   public function __construct(string $string = '')
   {
     $resource = fopen('php://temp', 'w+');
