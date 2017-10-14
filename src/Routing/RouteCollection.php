@@ -56,7 +56,8 @@ class RouteCollection implements RouteCollectionInterface
   {
     // concat basePattern
     $pattern = $this->basePattern . $pattern;
-    return new Route($methods, $pattern, $callback);
+    $this->routes[$pattern] = new Route($methods, $pattern, $callback);
+    return $this->routes[$pattern];
   }
 
   /**

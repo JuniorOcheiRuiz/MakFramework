@@ -4,44 +4,8 @@ namespace Makframework\Routing\Interfaces;
 /**
  * RouterInterface
  */
-interface RouterInterface extends RouterMethodsInterface
+interface RouterInterface extends RouteCollectionInterface
 {
-
-
-  /**
-   * getRoute
-   *
-   * @param string $pattern
-   * @return RouteInterface
-   */
-  public function getRoute(string $pattern) : RouteInterface;
-
-  /**
-   * getRoutes
-   *
-   * @return RouteInterface[]
-   */
-  public function getRoutes() : array;
-
-  /**
-   * setRoute
-   *
-   * @param array $methods
-   * @param string $pattern
-   *
-   * @return RouterInterface
-   */
-  public function setRoute() : RouterInterface;
-
-  /**
-   * setRoutes
-   *
-   * @param RouteInterface[]
-   * @return RouterInterface
-   */
-  public function setRoutes(array $routes) : RouterInterface;
-
-
   /**
    * run
    *

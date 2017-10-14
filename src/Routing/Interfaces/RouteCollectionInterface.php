@@ -28,73 +28,73 @@ interface RouteCollectionInterface
    *
    * @param string[] $methods
    * @param string $pattern
-   * @param string|callable|Closure $callback
+   * @param string|callable $callback
    * @return RouteInterface
    */
-   public function map(array $methods, string $pattern, $callback) : RouteInterface;
+   public function map(array $methods, string $pattern, callable $callback) : RouteInterface;
 
    /**
     * get
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function get(string $pattern, $callback) : RouteInterface;
+   public function get(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * post
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function post(string $pattern, $callback) : RouteInterface;
+   public function post(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * put
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function put(string $pattern, $callback) : RouteInterface;
+   public function put(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * delete
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function delete(string $pattern, $callback) : RouteInterface;
+   public function delete(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * options
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function options(string $pattern, $callback) : RouteInterface;
+   public function options(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * patch
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function patch(string $pattern, $callback) : RouteInterface;
+   public function patch(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * any
     *
     * @param string $pattern
-    * @param string|callable|Closure $callback
+    * @param string|callable $callback
     * @return RouteInterface
     */
-   public function any(string $pattern, $callback) : RouteInterface;
+   public function any(string $pattern, callable $callback) : RouteInterface;
 
    /**
     * group

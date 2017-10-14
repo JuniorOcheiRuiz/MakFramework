@@ -80,7 +80,9 @@ abstract class Routable implements RoutableInterface
    */
   public function addMiddleware(MiddlewareInterface $middleware) : RoutableInterface
   {
-    $this->middleware = $middleware;
+    $this->middlewares[] = $middleware;
+
+    return $this;
   }
 
   /**
@@ -90,6 +92,8 @@ abstract class Routable implements RoutableInterface
   public function addMiddlewares(array $middlewares) : RoutableInterface
   {
     $this->middlewares += $middlewares;
+
+    return $this;
   }
 
 

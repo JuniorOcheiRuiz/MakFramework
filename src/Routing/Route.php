@@ -192,7 +192,7 @@ class Route extends Routable implements RouteInterface
    *
    * @return Routable
    */
-  protected function pushToStack(callable $callaback) : Routable
+  protected function pushToStack(callable $callback) : Routable
   {
     // Next callable to execute
     $next = $this->stack;
@@ -223,13 +223,21 @@ class Route extends Routable implements RouteInterface
       $this->stack = $this;
     }
 
-
     foreach ($this->middlewares as $middleware) {
+
         $this->pushToStack($middleware);
     }
 
     // execute the stack
-    return $this->stack($request, $response);
+    $response = call_user_func($this->stack, $request, $response);
+
+    if (!$response instanceof ResponseInterface) {
+      $output = $response;
+      $response = new \Slim\Http\Response();
+      $response->getBody()->write((string) $output);
+    }
+
+    return $response;
   }
 
 

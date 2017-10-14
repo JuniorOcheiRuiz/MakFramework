@@ -1,9 +1,6 @@
 <?php
 namespace Makframework\Routing;
 
-use Makframework\Http\Exceptions\HttpException;
-use Makframework\Http\Exceptions\HttpNotFoundException;
-use Makframework\Http\Exceptions\HttpMethodNotAllowedException;
 use Makframework\Routing\Exceptions\RouterException;
 use Makframework\Routing\Interfaces\RouteInterface;
 use Makframework\Routing\Interfaces\RouterInterface;
@@ -81,7 +78,8 @@ class Router extends RouteCollection implements RouterInterface
    */
   protected function match(string $requestPath) : ?RoutableInterface
   {
-    foreach ($this->routes as $pattern => $route) {
+
+    foreach ($this->getRoutes() as $pattern => $route) {
 
       [$pattern, $segments] = $this->builtSegments($pattern);
 
@@ -117,7 +115,7 @@ class Router extends RouteCollection implements RouterInterface
    *
    * @param bool $debugMode
    *
-   * @throws HttpException
+   * @throws RouterException
    *
    * @return void
    */
@@ -133,14 +131,14 @@ class Router extends RouteCollection implements RouterInterface
     $route = $this->match($path);
 
     if (!$route) {
-      throw new HttpNotFoundException();
+      throw new RouterException('Route not found.');
     }
 
     // get method
     $method = $this->request->getMethod();
 
     if ($route instanceof RouteInterface && !$route->hasMethod($method)) {
-      throw new HttpMethodNotAllowedException();
+      throw new RouterException('Http Method not allowed.');
     }
 
     $this->executeRoute($route);
@@ -157,13 +155,19 @@ class Router extends RouteCollection implements RouterInterface
    */
   protected function executeRoute(RouteInterface $route) : void
   {
-    $response = $route->callStack();
+    $response = $route->callStack($this->request, $this->response);
 
-    if ($response instanceof ResponseInterface) {
-      echo $response;
-    } else {
-      $response = new Response((string) $response);
-      echo $response;
+    header(sprintf(
+      'HTTP/%s %s %s',
+      $response->getProtocolVersion(),
+      $response->getStatusCode(),
+      $response->getReasonPhrase()
+    ));
+
+    foreach ($response->getHeaders() as $name => $values) {
+      header(sprintf('%s: %s', $name, $response->getHeaderLine($name)));
     }
+
+    echo $response->getBody();
   }
 }

@@ -12,7 +12,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
-        "psr/http-message": "^1.0"
+        "psr/http-message": "^1.0",
+        "slim/http": "^0.3.0"
     },
     "autoload": {
       "psr-4": {
